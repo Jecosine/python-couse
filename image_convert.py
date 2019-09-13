@@ -18,7 +18,7 @@ def png2jpg(path):
     for i in imlist:
         fname = os.path.splitext(i)[0] + ".jpg"
         try:
-            Image.open(i).save(fname)
+            Image.open(i).convert("RGB").save(fname)
         except:
             print "Cannot convert file " + i
         else:

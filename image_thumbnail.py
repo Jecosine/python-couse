@@ -7,7 +7,9 @@ def thumbnail(path):
         fname = os.path.splitext(i)[0] + "_s.jpg"
         print fname
         try:
-            Image.open(i).thumbnail(128,128).save(fname)
+            im = Image.open(i)
+            im.thumbnail((128,128))
+            im.save(fname)
         except:
             print "Cannot create thumbnail of file " + i
         else:
