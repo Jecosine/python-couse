@@ -1,6 +1,7 @@
 from PIL import Image
 from numpy import *
 from scipy import ndimage
+import time
 '''
 First implement: use numpy to convert image to an array, then rebuild an image copy from this array
 @para im: <class 'PIL.PngImagePlugin.PngImageFile'> image object that you want to copy 
@@ -142,29 +143,27 @@ def rotate(im, mode = True):
 
 @para im: <class 'PIL.PngImagePlugin.PngImageFile'> image object that you want to smooth 
 '''
-def smooth(im):
+def smooth2(im):
     smoothed = Image.new(im.mode, im.size)
     w, h = im.size
     # print(im.getpixel((0, 0)))
     #kernel = array([[[1/9, 1/9, 1/9],[1/9, 1/9, 1/9],[1/9, 1/9, 1/9]],[[1/9, 1/9, 1/9],[1/9, 1/9, 1/9],[1/9, 1/9, 1/9]],[[1/9, 1/9, 1/9],[1/9, 1/9, 1/9],[1/9, 1/9, 1/9]]])
     kernel = ones((3, 3, 3)) / 27
     imdata = array(im)
-
     temp = ndimage.convolve(imdata, kernel)
-    print(temp.dtype)
     smoothed = Image.fromarray(temp)
     smoothed.show()
     return smoothed
 
-# def smooth(im):
-#     smoothed = Image.new(im.mode, im.size)
-#     w, h = im.size
-#     # print(im.getpixel((0, 0)))
-#     for i in range(w):
-#         for j in range(h):
-#             smoothed.putpixel((i, j), get_average(im, i, j))
-#     smoothed.show()
-#     return smoothed
+def smooth1(im):
+    smoothed = Image.new(im.mode, im.size)
+    w, h = im.size
+    # print(im.getpixel((0, 0)))
+    for i in range(w):
+        for j in range(h):
+            smoothed.putpixel((i, j), get_average(im, i, j))
+    #smoothed.show()
+    return smoothed
 
 def get_average(im, i, j):
     w, h = im.size
@@ -181,4 +180,10 @@ def get_average(im, i, j):
 # Example
 if __name__ == "__main__":
     im = Image.open("images/02.jpg")
-    smooth(im)
+    # t1 = time.time()
+    # smooth1(im)
+    # t2 = time.time()
+    # smooth2(im)
+    # t3 = time.time()
+    # print("Method 1 use: {0} s\nMethod 2 use: {1} s".format(t2 - t1, t3 - t2))
+    smooth2(im)
