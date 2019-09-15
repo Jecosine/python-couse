@@ -7,16 +7,24 @@ def mainprocess(path):
     pyt.pytesseract.tesseract_cmd = r'D:/Program Files/Tesseract-OCR/tesseract.exe'
     #tessdata_dir_config = r' - tessdata-dir "D:\\Program Files\\Tesseract-OCR\\tessdata"'
     im = cv2.imread(path)
+    contours = im.copy()
     h, w, _ = im.shape
     gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
     morph = preprocess(gray)
     textarea = get_area(morph)
-    for box in textarea:
-        #cv2.drawContours(im, [box], 0, (0, 255, 0), 2)
+    #print(pyt.image_to_string(cv2.imread("images/3.jpg"), lang="chi_sim"))
+    # count = 0
+    content = ""
+    for box in textarea[::-1]:
+        cv2.drawContours(contours, [box], 0, (0, 255, 0), 2)
         t = np.array(box).transpose()
         x1, y1, x2, y2 = (min(t[0]), min(t[1]), max(t[0]), max(t[1]))
-        print(pyt.image_to_string(im[y1:min(y2 + 5, h), x1:min(x2 + 5, w)], lang="chi_sim"))
-
+        # cv2.imwrite("images/{0}.jpg".format(count), im[max(y1-5,0):min(y2+5, h), max(x1-5,0):min(x2+5, w)])
+        # count += 1
+        content += pyt.image_to_string(im[max(y1-5,0):min(y2+5, h), max(x1-5,0):min(x2+5, w)], lang="chi_sim") + "\n"
+    with open("result.txt", "w") as f:
+        f.write(content)
+    cv2.imwrite("images/contours.jpg", contours)
 
 
 
@@ -35,8 +43,7 @@ def preprocess(gray):
     erosion = cv2.erode(dilation, erosions_core, iterations=1)
     #dilation twice
     dilation2 = cv2.dilate(erosion, dilation_core, iterations=3)
-
-
+    # Debug output
     cv2.imwrite("binary.png", binary)
     cv2.imwrite("dilation.png", dilation)
     cv2.imwrite("erosion.png", erosion)
@@ -61,8 +68,7 @@ def get_area(im):
         # get width and height
         height = abs(box[0][1] - box[2][1])
         width = abs(box[0][0] - box[2][0])
-
-        # 筛选那些太细的矩形，留下扁的
+        # ignore rectangle in vertical direction
         if (height > width * 1.2):
             continue
         region.append(box)
@@ -70,4 +76,4 @@ def get_area(im):
 
 
 if __name__ == "__main__":
-    mainprocess("images/t.jpg")
+    mainprocess("images/text.jpg")
