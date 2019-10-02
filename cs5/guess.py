@@ -39,11 +39,11 @@ def connect_server():
     status = True
     login.destroy()
     return
-
+# main windows
 window = tk.Tk()
 window.title("Guess")
 window.geometry("300x200")
-
+# login windows
 login = tk.Toplevel(window)
 login.geometry("300x200")
 login.title("Select Server")
@@ -62,7 +62,6 @@ nickname_bar.place(x = 130, y = 50)
 
 confirm = tk.Button(login, text = "Connect", command = connect_server)
 confirm.place(x = 130, y = 90)
-
 
 answer = tk.StringVar()
 tk.Label(window, text="Answer").place(x = 10, y = 10)
