@@ -3,14 +3,35 @@ import socket
 
 
 client = socket.socket()
+status = False
 def submit_answer():
     var = text.get()
     print(var)
 def parse(s):
-    s = server_ip.get()
+    s = [i.strip() for i in s.strip().split(":")]
+    if len(s) != 2:
+        return False
+    else:
+        return s[0], int(s[1])
+
 def connect_server():
     global client
-    client.connet()
+    global status
+    s = server_ip.get()
+    _ = parse(s)
+    if not _:
+        status = False
+        tk.messagebox.showerror('Error server address')
+        return
+    try:
+        client.connect(_)
+    except Exception as e:
+        status = False
+        tk.messagebox.showerror('Error connecting server: {0}'.format(e))
+        return
+    status = True
+    login.destroy()
+    return
 
 window = tk.Tk()
 window.title("Guess")
