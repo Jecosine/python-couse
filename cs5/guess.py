@@ -7,8 +7,9 @@ client = socket.socket()
 status = False
 def submit_answer():
     global client
-    client.sendAll(answer.encode())
-    print()
+    client.sendAll(("A:" + answer).encode())
+    res = client.recv(1024)
+    print(res)
 def parse(s):
     s = [i.strip() for i in s.strip().split(":")]
     if len(s) != 2:
