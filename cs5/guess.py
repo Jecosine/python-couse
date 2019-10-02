@@ -5,10 +5,14 @@ import socket
 
 client = socket.socket()
 status = False
+point = 0
 def submit_answer():
     global client
-    client.sendAll(("A:" + answer).encode())
+    client.sendall(("A:" + answer.get()).encode())
     res = client.recv(1024)
+    if res == "True":
+        point += 1
+    answer.set("")
     print(res)
 def parse(s):
     s = [i.strip() for i in s.strip().split(":")]
@@ -46,6 +50,7 @@ login.title("Select Server")
 
 server_ip = tk.StringVar()
 nickname = tk.StringVar()
+server_ip.set("10.129.12.83:9999")
 tk.Label(login, text="Server IP: ").place(x = 10, y = 10)
 tk.Label(login, text="Nickname: ").place(x = 10, y = 50)
 # ip bar
