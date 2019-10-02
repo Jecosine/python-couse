@@ -1,12 +1,14 @@
 import tkinter as tk
+import tkinter.messagebox as ms
 import socket
 
 
 client = socket.socket()
 status = False
 def submit_answer():
-    var = text.get()
-    print(var)
+    global client
+    client.sendAll(answer.encode())
+    print()
 def parse(s):
     s = [i.strip() for i in s.strip().split(":")]
     if len(s) != 2:
@@ -21,13 +23,13 @@ def connect_server():
     _ = parse(s)
     if not _:
         status = False
-        tk.messagebox.showerror('Error server address')
+        ms.showerror('Error', 'Invalid server address')
         return
     try:
         client.connect(_)
     except Exception as e:
         status = False
-        tk.messagebox.showerror('Error connecting server: {0}'.format(e))
+        ms.showerror('Error connecting server', '{0}'.format(e))
         return
     status = True
     login.destroy()
@@ -56,11 +58,11 @@ confirm = tk.Button(login, text = "Connect", command = connect_server)
 confirm.place(x = 130, y = 90)
 
 
-text = tk.Entry(window, show = None)
+answer = tk.StringVar()
+tk.Label(window, text="Answer").place(x = 10, y = 10)
+text = tk.Entry(window, textvariable = answer)
 text.place(x = 130, y = 10)
 
-
-
-submit = tk.Button(window, text="Submit", width = 5, height = 1, command=submit_answer)
-submit.pack()
+submit = tk.Button(window, text="Submit", command=submit_answer)
+submit.place(x = 130, y = 50)
 window.mainloop()
