@@ -1,6 +1,27 @@
 import socketserver
+import random
+import time
+class GuessGame:
+    def __init__(self, wordlist="words.txt"):
+        self.__init__()
+        self.current = ""
+        self.current_index = -1
+        self.bingo = False
+        self.wordlist = []
+        self.wordlist_path = wordlist
+
+        random.seed(time.time())
+    def init_wordlist(self):
+        with open(self.wordlist, "r") as f:
+            content = f.read()
+            content = [word.strip() for word in content.split("\n") if len(word.strip())>1]
+        self.wordlist = content
+    def instance_word(self):
+        random
+    
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
+
     def handle(self):
         try:
             while True:
@@ -9,10 +30,11 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
                 if not self.data:
                     print("connection lost")
                     break
-                if len(self.data) and self.data[:2] == "A:":
+                if len(self.data) and self.data[:2] == b"A:":
                     res = self.data[3:]
-                    print(res)
-                
+                    self.judge(res)
+                else:
+
                # self.request.sendall(self.data.upper())
         except Exception as e:
             print(self.client_address,"Disconnect")
