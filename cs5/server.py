@@ -2,14 +2,15 @@ import socketserver
 import random
 import time
 class GuessGame:
-    def __init__(self, wordlist="words.txt"):
+    def __init__(self, wordlist="words.txt", player):
         self.__init__()
         self.current = ""
         self.current_index = -1
         self.bingo = False
         self.wordlist = []
         self.wordlist_path = wordlist
-
+        self.player = player
+        self.turn_winner = None
         random.seed(time.time())
     def init_wordlist(self):
         with open(self.wordlist, "r") as f:
@@ -17,8 +18,16 @@ class GuessGame:
             content = [word.strip() for word in content.split("\n") if len(word.strip())>1]
         self.wordlist = content
     def instance_word(self):
-        random
-    
+        self.current_index = random.range(len(self.wordlist)-1)
+        self.current = self.wordlist[self.current_index]
+        
+    def judge(self, post):
+        if (type(post) == type(b''):
+            post = post.decode()
+        if post == self.current:
+            self.bingo == True
+
+        
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
 
