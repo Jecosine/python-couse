@@ -4,4 +4,6 @@ def jumble(word):
     while len(word) > 1:
         i = random.randrange(len(word))
         jb += word[i]
-        word = word[:i] + word[i+1:] if (i + 1 > len(word)) else '' 
+        word = word[:i] + (word[i+1:] if (i + 1 < len(word)) else '' )
+    jb += word
+    return jb
