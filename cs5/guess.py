@@ -28,6 +28,7 @@ def connect_server():
     global score
     global _current
     global jumble
+    global winner
     s = server_ip.get()
     _ = parse(s)
     if not _:
@@ -63,13 +64,20 @@ def connect_server():
                 jumble.set(data['jumble'])
                 score.set(data['score'])
                 _current.set(data['current'])
-                
+                winner.set(data['winner'])
 
 
     
     return
 def start_game():
-    pass
+    global nickname
+    global client
+    data = {
+        'status' : 1,
+        'nickname': nickname.get() 
+    }
+    client.sendall(json.dumps(data).encode())
+
 def stop_game():
     pass
 def giveup():
@@ -86,6 +94,7 @@ menubar.add_cascade(label='Game', menu = gamemenu)
 gamemenu.add_command(label='New', command = start_game)
 gamemenu.add_command(label='Stop Game', command = stop_game)
 gamemenu.add_command(label='Quit', command=window.quit)
+window.config(menu = menubar)
 # login windows
 login = tk.Toplevel(window)
 login.geometry("300x200")
@@ -109,7 +118,7 @@ confirm.place(x = 130, y = 90)
 
 #jumble
 jumble = tk.StringVar()
-tk.Label(window, text="Current Jumble").place(x = 10, y = 30)
+tk.Label(window, text="Current Jumble:").place(x = 10, y = 30)
 tk.Label(window, text=jumble.get()).place(x = 130, y = 30)
 #timer
 timer = tk.StringVar()
@@ -118,7 +127,8 @@ tk.Label(window, text=timer.get()).place(x = 130, y = 60)
 #score
 score = tk.StringVar()
 score.set('0')
-tk.Label(window, text=score.get()).place(x = 10, y = 0)
+tk.Label(window, text="Score: ").place(x = 10, y = 0)
+tk.Label(window, text=score.get()).place(x = 50, y = 0)
 #winner
 winner = tk.StringVar()
 winner.set('Guessing')
@@ -126,7 +136,7 @@ tk.Label(window, text=winner.get()).place(x = 130, y = 0)
 # correct 
 _current = tk.StringVar()
 _current.set("Unpublished")
-tk.Label(window, text="Correct Answer").place(x = 10, y = 90)
+tk.Label(window, text="Correct Answer:").place(x = 10, y = 90)
 tk.Label(window, text=_current.get()).place(x = 130, y = 90)
 #answer
 answer = tk.StringVar()
