@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.messagebox as ms
 import socket
+import json
 
 
 client = socket.socket()
@@ -39,10 +40,24 @@ def connect_server():
     status = True
     login.destroy()
     return
+def start_game():
+    pass
+def stop_game():
+    pass
+def giveup():
+    pass
 # main windows
 window = tk.Tk()
 window.title("Guess")
 window.geometry("300x200")
+# toolbar of main windows
+menubar = tk.Menu(window)
+# add selector game
+gamemenu = tk.Menu(menubar, tearoff=0)
+menubar.add_cascade(label='Game', menu = gamemenu)
+gamemenu.add_command(label='New', command = start_game)
+gamemenu.add_command(label='Stop Game', command = stop_game)
+gamemenu.add_command(label='Quit', command=window.quit)
 # login windows
 login = tk.Toplevel(window)
 login.geometry("300x200")
@@ -50,7 +65,7 @@ login.title("Select Server")
 
 server_ip = tk.StringVar()
 nickname = tk.StringVar()
-server_ip.set("10.129.12.83:9999")
+server_ip.set("10.129.15.37:9999")
 tk.Label(login, text="Server IP: ").place(x = 10, y = 10)
 tk.Label(login, text="Nickname: ").place(x = 10, y = 50)
 # ip bar
@@ -63,11 +78,15 @@ nickname_bar.place(x = 130, y = 50)
 confirm = tk.Button(login, text = "Connect", command = connect_server)
 confirm.place(x = 130, y = 90)
 
+tk.Label(window, text="Time").place(x = 10, y = 10)
+text = tk.Entry(window, textvariable = answer)
 answer = tk.StringVar()
 tk.Label(window, text="Answer").place(x = 10, y = 10)
 text = tk.Entry(window, textvariable = answer)
 text.place(x = 130, y = 10)
-
+# submit button
 submit = tk.Button(window, text="Submit", command=submit_answer)
 submit.place(x = 130, y = 50)
+giveup = tk.Button(window, text="Give Up", command=giveup)
+giveup.place(x = 130, y = 80)
 window.mainloop()

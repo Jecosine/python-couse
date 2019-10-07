@@ -2,7 +2,7 @@ import socketserver
 import random
 import time
 class GuessGame:
-    def __init__(self, wordlist="words.txt", player):
+    def __init__(self, wordlist="words.txt", player=[]):
         self.__init__()
         self.current = ""
         self.current_index = -1
@@ -17,9 +17,11 @@ class GuessGame:
             content = f.read()
             content = [word.strip() for word in content.split("\n") if len(word.strip())>1]
         self.wordlist = content
+    
     def instance_word(self):
         self.current_index = random.range(len(self.wordlist)-1)
         self.current = self.wordlist[self.current_index]
+        self.jumble_word = self.jumble(self.current)
         
     def judge(self, post):
         if (type(post) == type(b''):
@@ -27,14 +29,25 @@ class GuessGame:
         if post == self.current:
             self.bingo == True
 
+    def jumble(self, word):
+        jb = ''
+        while len(word) > 1:
+            i = random.randrange(len(word))
+            jb += word[i]
+            word = word[:i] + word[i+1:] if (i + 1 > len(word)) else '' 
         
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
-
+    # while got connected
+    # status code
+    # 1 -> start game
+    # 2 -> close game, return rank
+    # 3 -> 
     def handle(self):
         try:
             while True:
-                self.data=self.request.recv(1024)
+                self.data = self.request.recv(1024)
+                # print connected host
                 print("{} send:".format(self.client_address),self.data)
                 if not self.data:
                     print("connection lost")
@@ -42,7 +55,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
                 if len(self.data) and self.data[:2] == b"A:":
                     res = self.data[3:]
                     self.judge(res)
-                else:
+
 
                # self.request.sendall(self.data.upper())
         except Exception as e:
