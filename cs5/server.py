@@ -24,7 +24,7 @@ class GuessGame:
         self.jumble_word = self.jumble(self.current)
         
     def judge(self, post):
-        if (type(post) == type(b''):
+        if (type(post) == type(b'')):
             post = post.decode()
         if post == self.current:
             self.bingo == True
@@ -34,7 +34,9 @@ class GuessGame:
         while len(word) > 1:
             i = random.randrange(len(word))
             jb += word[i]
-            word = word[:i] + word[i+1:] if (i + 1 > len(word)) else '' 
+            word = word[:i] + (word[i+1:] if (i + 1 < len(word)) else '' )
+        jb += word
+        return jb
         
 
 class MyTCPHandler(socketserver.BaseRequestHandler):

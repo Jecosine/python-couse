@@ -25,6 +25,9 @@ def parse(s):
 def connect_server():
     global client
     global status
+    global score
+    global _current
+    global jumble
     s = server_ip.get()
     _ = parse(s)
     if not _:
@@ -37,8 +40,33 @@ def connect_server():
         status = False
         ms.showerror('Error connecting server', '{0}'.format(e))
         return
-    status = True
-    login.destroy()
+    else:
+        status = True
+        login.destroy()
+        while True:
+            data = client.recv(1024)
+            try:
+                data = json.loads(data)
+                keys = data.keys()
+            except:
+                pass
+            else:
+                # Status code: 
+                # 1 : new turn
+                # 2 : post result
+                # 3 : game over
+                # data:
+                # score int
+                # jumble string
+                # current string
+                status = int(data['status'])
+                jumble.set(data['jumble'])
+                score.set(data['score'])
+                _current.set(data['current'])
+                
+
+
+    
     return
 def start_game():
     pass
@@ -49,7 +77,7 @@ def giveup():
 # main windows
 window = tk.Tk()
 window.title("Guess")
-window.geometry("300x200")
+window.geometry("300x300")
 # toolbar of main windows
 menubar = tk.Menu(window)
 # add selector game
@@ -78,15 +106,36 @@ nickname_bar.place(x = 130, y = 50)
 confirm = tk.Button(login, text = "Connect", command = connect_server)
 confirm.place(x = 130, y = 90)
 
-tk.Label(window, text="Time").place(x = 10, y = 10)
-text = tk.Entry(window, textvariable = answer)
+
+#jumble
+jumble = tk.StringVar()
+tk.Label(window, text="Current Jumble").place(x = 10, y = 30)
+tk.Label(window, text=jumble.get()).place(x = 130, y = 30)
+#timer
+timer = tk.StringVar()
+timer.set('0')
+tk.Label(window, text=timer.get()).place(x = 130, y = 60)
+#score
+score = tk.StringVar()
+score.set('0')
+tk.Label(window, text=score.get()).place(x = 10, y = 0)
+#winner
+winner = tk.StringVar()
+winner.set('Guessing')
+tk.Label(window, text=winner.get()).place(x = 130, y = 0)
+# correct 
+_current = tk.StringVar()
+_current.set("Unpublished")
+tk.Label(window, text="Correct Answer").place(x = 10, y = 90)
+tk.Label(window, text=_current.get()).place(x = 130, y = 90)
+#answer
 answer = tk.StringVar()
-tk.Label(window, text="Answer").place(x = 10, y = 10)
+tk.Label(window, text="Answer").place(x = 10, y = 120)
 text = tk.Entry(window, textvariable = answer)
-text.place(x = 130, y = 10)
+text.place(x = 130, y = 120)
 # submit button
 submit = tk.Button(window, text="Submit", command=submit_answer)
-submit.place(x = 130, y = 50)
+submit.place(x = 130, y = 150)
 giveup = tk.Button(window, text="Give Up", command=giveup)
-giveup.place(x = 130, y = 80)
+giveup.place(x = 130, y = 180)
 window.mainloop()
