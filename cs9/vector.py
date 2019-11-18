@@ -36,8 +36,13 @@ class Sketch:
             f[hash(kg) % d] += 1
         v = Vector(f)
         self.__sketch = v.normalized()
+    def similarity(self, e):
+        return self.__sketch.dot(e.__sketch)
+    def __str__(self):
+        return str(self.__sketch)
 
 if __name__ == "__main__":
+    # test Vector
     v1 = Vector((1,2))
     v2 = Vector((2,3))
     print("length of v1 is %s" % len(v1))
@@ -46,3 +51,9 @@ if __name__ == "__main__":
     print("|v1| = %s" %abs(v1))
     print("2v1 = %s" % v1.scale(2))
     
+    # test sketch
+    text1 = "abcdefghijklmn"
+    text2 = "abcdefghnbklmn"
+    s1 = Sketch(text1, 2, 4)
+    s2 = Sketch(text2, 2, 4)
+    print(s1.similarity(s2))
