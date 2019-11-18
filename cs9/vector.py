@@ -21,14 +21,21 @@ class Vector:
     def dot(self, b):
         result = [self.__value[i] * b[i] for i in range(self.__length)]
         return sum(result)
-    def normalize(self):
+    def normalized(self):
         return Vector([i / self.__abs__() for i in self.__value])
     def __len__(self):
         return self.__length
     def __str__(self):
         return str(self.__value)
 
-class sketch
+class Sketch:
+    def __init__(self, text, k, d):
+        f = [0 for i in range(d)]
+        for i in range(len(text) - k):
+            kg = text[i: i+k]
+            f[hash(kg) % d] += 1
+        v = Vector(f)
+        self.__sketch = v.normalized()
 
 if __name__ == "__main__":
     v1 = Vector((1,2))
