@@ -1,26 +1,51 @@
 from PIL import Image, ImageDraw, ImageFont
 import myutils as ut
 import os
-def add_watermarks(path):
+'''
+add_watermarks adds the image-type logo to origin images in specified directory
+
+@para path: <string> select a directory to process all jpg
+@para logopath: <string> select a image's path which used as water mark
+@para logo_size: <list> a list of length 2 to describe the logo size (width, height)
+@para position: <list> a list with length 2
+'''
+def add_watermarks(path, logopath, logo_size = [200, 100], position = [0, 0]):
     imlist = ut.get_imlist(path, ".jpg")
     for i in imlist:
         fname = os.path.splitext(i)[0] + '_w.jpg'
         im = Image.open(i).convert('RGBA')
-        out = add_watermark_single(im, "Python", [0, 0], [255,255,255,100], "LucidaTypewriterRegular.ttf")
-        out.save(fname)
-
+        logo = Image.open(logopath).convert('RGBA')
+        try: 
+            out = add_watermark_single(im, logo, logo_size, position)
+            out.convert('RGB').save(fname)
+        except Exception as e:
+            print "Cannot convert file.Error info: {0}".format(i), e
+        else:
+            print "{0} coverted".format(i)
 
 '''
+logo_resize resize the logo image to fit the image size
+
+@para logo: <class 'PIL.PngImagePlugin.PngImageFile'> image used as water mark
+@para logo_size: <list> a list of length 2 to describe the logo size (width, height)
+'''
+def logo_resize(logo, logo_size):
+    return logo.resize(logo_size)
+
+'''
+add_watermark_single add water mark to one image
+
 @para im: <class 'PIL.PngImagePlugin.PngImageFile'> origin image
-@para content: <string> content of watermark
+@para logo: <class 'PIL.PngImagePlugin.PngImageFile'> image used as water mark
 @para position: <list> a list with length 2
-@para color: <list> a list with length 4
-@para fpath: <string> the path of font
 '''
-def add_watermark_single(im, content, position, color, fpath):
+def add_watermark_single(im, logo, logo_size, position):
     panel = Image.new("RGBA", im.size, (0,0,0,0))
-    font = ImageFont.truetype(fpath)
-    mask = ImageDraw.Draw(panel)
-    mask.text(position[0], position[1], content, font, color)
-    output = Image.alpha_composite(im, mask)
+    logo = logo_resize(logo, logo_size)
+    panel.paste(logo, position)
+    output = Image.alpha_composite(im, panel)
     return output
+
+# Example
+if __name__ == "__main__":
+    add_watermarks(".", "python-logo.png", [200, 100], [0, 0])
