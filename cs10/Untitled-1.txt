@@ -1,0 +1,14 @@
+SUM
+http://acm.hdu.edu.cn/showproblem.php?pid=1001
+最小长方形
+http://acm.hdu.edu.cn/showproblem.php?pid=1859
+圆桌会议
+http://acm.hdu.edu.cn/showproblem.php?pid=4841
+奥运排序
+http://acm.hdu.edu.cn/showproblem.php?pid=3789
+汉诺塔
+http://acm.hdu.edu.cn/showproblem.php?pid=1207
+漫步森林
+http://acm.hdu.edu.cn/showproblem.php?pid=1273
+最大报销额
+http://acm.hdu.edu.cn/showproblem.php?pid=1864
